@@ -13,7 +13,7 @@ const TOTAL_CELL = ROW * COLUMN;
 
 const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-const visitedCellStack:Cell[] = [];
+const visitedCellStack: Cell[] = [];
 
 window.onload = async () => {
   canvas.height = HEIGHT;
@@ -31,12 +31,9 @@ window.onload = async () => {
   let current: Cell | undefined = grid['0-0'];
   while (current && (current.getX !== 5 || current.getY !== 2)) {
     current.visited = true;
-    current.drawActive(ctx);
-    await delay(500);
-    current.draw(ctx);
-    const next = current.checkNeighbors(grid);
+    const next: Cell | undefined = current.checkNeighbors(grid);
     if (next) {
-      // removeWall(current, next);
+      removeWall(current, next);
       visitedCellStack.push(next);
       current = next;
     } else {
@@ -45,20 +42,16 @@ window.onload = async () => {
   }
   console.log('done');
 
-
-  Object.values(grid).map((cell) => {
-    cell.visited = false;
-  });
+  // Object.values(grid).map((cell) => {
+  //   cell.visited = false;
+  // });
 
   current = grid['10-4'];
   while (current && (current.getX !== 5 || current.getY !== 2)) {
     current.visited = true;
-    current.drawActive(ctx);
-    await delay(500);
-    current.draw(ctx, 'green');
     const next = current.checkNeighbors(grid);
     if (next) {
-      // removeWall(current, next);
+      removeWall(current, next);
       visitedCellStack.push(next);
       current = next;
     } else {
@@ -66,15 +59,46 @@ window.onload = async () => {
     }
   }
 
+  // Object.values(grid).map((cell) => {
+  //   cell.visited = false;
+  // });
+
+  // current =
+  //   grid[
+  //     `${Math.floor(Math.random() * ROW)}-${Math.floor(
+  //       Math.random() * COLUMN,
+  //     )}`
+  //   ];
+  //   console.log(`${Math.floor(Math.random() * ROW)}-${Math.floor(
+  //     Math.random() * COLUMN,
+  //   )}`)
+  //   console.log(current);
+  // while (current) {
+  //   current.visited = true;
+  //   const next = current.checkNeighbors(grid);
+  //   if (next) {
+  //     removeWall(current, next);
+  //     visitedCellStack.push(next);
+  //     current = next;
+  //   } else {
+  //     current = visitedCellStack.pop();
+  //   }
+  // }
+
+  grid['5-2'].drawActive(ctx, 'blue');
   for (const cell of Object.values(grid)) {
     if (cell.visited) {
+      // cell.drawActive(ctx);
+      await delay(100);
       cell.draw(ctx);
     }
+    // cell.draw(ctx);
   }
+  grid['5-2'].drawActive(ctx, 'blue');
   console.log('done');
 };
 
-const removeWall = (current:Cell, next: Cell) => {
+const removeWall = (current: Cell, next: Cell) => {
   if (next.getX !== current.getX) {
     if (next.getX > current.getX) {
       current.walls[Wall.Right] = false;
@@ -86,12 +110,12 @@ const removeWall = (current:Cell, next: Cell) => {
   } else {
     if (next.getY > current.getY) {
       current.walls[Wall.Bottom] = false;
-      next.walls[Wall.Top] = false
+      next.walls[Wall.Top] = false;
     } else {
       current.walls[Wall.Top] = false;
       next.walls[Wall.Bottom] = false;
     }
   }
-}
+};
 
 const delay = (t: number) => new Promise((resolve) => setTimeout(resolve, t));

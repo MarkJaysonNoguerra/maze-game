@@ -36,22 +36,28 @@ export class Cell {
     return `${x}-${y}`;
   }
 
-  drawActive(ctx: CanvasRenderingContext2D) {
-    this.drawRect(
-      ctx,
-      [this.startX, this.startY],
-      [this.width, this.height],
-      'orange',
-    );
-  }
-
-  draw(ctx: CanvasRenderingContext2D, color = 'blue') {
+  drawActive(ctx: CanvasRenderingContext2D, color = 'orange') {
     this.drawRect(
       ctx,
       [this.startX, this.startY],
       [this.width, this.height],
       color,
     );
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    // this.drawRect(
+    //     ctx,
+    //     [this.startX, this.startY],
+    //     [this.width, this.height],
+    //     'blue',
+    //   );
+    // console.log(
+    //     this.walls[Wall.Top],
+    //     this.walls[Wall.Right],
+    //     this.walls[Wall.Bottom],
+    //     this.walls[Wall.Left]
+    // );
 
     if (this.walls[Wall.Top]) {
       this.drawLine(
@@ -92,11 +98,9 @@ export class Cell {
     widthHeight: [number, number],
     filleStyle = 'blue',
   ) {
-    ctx.beginPath();
     ctx.rect(...startPoint, ...widthHeight);
     ctx.fillStyle = filleStyle;
     ctx.fill();
-    ctx.stroke();
   }
 
   public get getX() {
@@ -126,5 +130,6 @@ export class Cell {
     ctx.strokeStyle = 'red';
     ctx.lineWidth = 5;
     ctx.stroke();
+    ctx.closePath();
   }
 }
