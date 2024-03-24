@@ -5,8 +5,11 @@ import { Wall } from './walls';
 
 const HEIGHT = 400;
 const WIDTH = 800;
-const ROW = 5;
-const COLUMN = 11;
+const ROW = 11;
+const COLUMN = 23;
+const ROW_MIDDLE = Math.floor(ROW / 2);
+const COLUMN_MIDDLE = Math.floor(COLUMN / 2);
+
 const BOX_WIDTH = WIDTH / COLUMN;
 const BOX_HEIGHT = HEIGHT / ROW;
 const TOTAL_CELL = ROW * COLUMN;
@@ -29,7 +32,10 @@ window.onload = async () => {
   }
 
   let current: Cell | undefined = grid['0-0'];
-  while (current && (current.getX !== 5 || current.getY !== 2)) {
+  while (
+    current &&
+    (current.getX !== COLUMN_MIDDLE || current.getY !== ROW_MIDDLE)
+  ) {
     current.visited = true;
     const next: Cell | undefined = current.checkNeighbors(grid);
     if (next) {
@@ -40,14 +46,12 @@ window.onload = async () => {
       current = visitedCellStack.pop();
     }
   }
-  console.log('done');
 
-  // Object.values(grid).map((cell) => {
-  //   cell.visited = false;
-  // });
-
-  current = grid['10-4'];
-  while (current && (current.getX !== 5 || current.getY !== 2)) {
+  current = grid[`${COLUMN - 1}-${ROW_MIDDLE - 1}`];
+  while (
+    current &&
+    (current.getX !== COLUMN_MIDDLE || current.getY !== ROW_MIDDLE)
+  ) {
     current.visited = true;
     const next = current.checkNeighbors(grid);
     if (next) {
@@ -59,42 +63,26 @@ window.onload = async () => {
     }
   }
 
-  // Object.values(grid).map((cell) => {
-  //   cell.visited = false;
-  // });
-
-  // current =
-  //   grid[
-  //     `${Math.floor(Math.random() * ROW)}-${Math.floor(
-  //       Math.random() * COLUMN,
-  //     )}`
-  //   ];
-  //   console.log(`${Math.floor(Math.random() * ROW)}-${Math.floor(
-  //     Math.random() * COLUMN,
-  //   )}`)
-  //   console.log(current);
-  // while (current) {
-  //   current.visited = true;
-  //   const next = current.checkNeighbors(grid);
-  //   if (next) {
-  //     removeWall(current, next);
-  //     visitedCellStack.push(next);
-  //     current = next;
-  //   } else {
-  //     current = visitedCellStack.pop();
-  //   }
-  // }
-
-  grid['5-2'].drawActive(ctx, 'blue');
-  for (const cell of Object.values(grid)) {
-    if (cell.visited) {
-      // cell.drawActive(ctx);
-      await delay(100);
-      cell.draw(ctx);
+  current = Object.values(grid).filter(({ visited }) => !visited)[0];
+  while (current) {
+    current.visited = true;
+    const next = current.checkNeighbors(grid);
+    if (next) {
+      removeWall(current, next);
+      visitedCellStack.push(next);
+      current = next;
+    } else {
+      current = visitedCellStack.pop();
+      if (!current) {
+        current = Object.values(grid).filter(({ visited }) => !visited)[0];
+      }
     }
-    // cell.draw(ctx);
   }
-  grid['5-2'].drawActive(ctx, 'blue');
+
+  for (const cell of Object.values(grid)) {
+      cell.draw(ctx);
+  }
+  grid[`${COLUMN_MIDDLE}-${ROW_MIDDLE}`].drawActive(ctx, 'blue');
   console.log('done');
 };
 
