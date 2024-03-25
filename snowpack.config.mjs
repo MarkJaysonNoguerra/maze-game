@@ -28,7 +28,8 @@ export default {
     /* ... */
   },
   buildOptions: {
-    out: '../maze-build'
+    out: '../maze-build', // working with worktree here
+    clean: false,
     /* ... */
   },
 };

@@ -1,8 +1,7 @@
-import 'normalize.css';
+// import 'normalize.css';
 import { Cell } from './cell';
 import { Grid } from './grid';
 import { Player } from './player';
-import { Wall as Move } from './walls';
 import { Control } from './control';
 import { drawRect } from './helper';
 
