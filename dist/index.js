@@ -1,4 +1,3 @@
-import "../_snowpack/pkg/normalize.css.proxy.js";
 import {Cell} from "./cell.js";
 import {Grid} from "./grid.js";
 import {Player} from "./player.js";
