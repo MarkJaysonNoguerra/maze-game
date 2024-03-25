@@ -15,8 +15,8 @@ export class CanvasDrawer {
     }
   }
 
-  drawGoal(x: number, y: number, weight: number, height: number){
-    drawRect(this.ctx, [x, y], [weight, height]);
+  drawGoal(x: number, y: number, weight: number, height: number, color = 'blue'){
+    drawRect(this.ctx, [x, y], [weight, height], color);
   }
 
   private drawWalls(cell: Cell) {

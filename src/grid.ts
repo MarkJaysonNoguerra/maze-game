@@ -1,11 +1,12 @@
 import { CanvasDrawer } from './canvas-drawer';
 import { Cell } from './cell';
+import { delay } from './helper';
 import { Wall } from './walls';
 
 export type GridData = Record<string, Cell>;
 
 export class Grid {
-  private gridData: GridData = {};
+  public gridData: GridData = {};
   private visitedCellStack: Cell[] = [];
   private drawer: CanvasDrawer;
 
@@ -40,6 +41,13 @@ export class Grid {
       this.cellHeight,
     );
     this.drawer.drawMaze(this.getGridData);
+  }
+
+  resetVisited() {
+    for(const item of this.getGridData) {
+      item.visited = false;
+    }
+    return this;
   }
 
   generatePath(startX: number, startY: number) {

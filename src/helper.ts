@@ -18,7 +18,12 @@ export const drawRect = (
   widthHeight: [number, number],
   filleStyle = 'blue',
 ) => {
+  ctx.beginPath();
   ctx.rect(...startPoint, ...widthHeight);
   ctx.fillStyle = filleStyle;
   ctx.fill();
+  ctx.closePath()
 };
+
+export const delay = async (t: number) =>
+  new Promise((resolve: any) => setTimeout(() => resolve(), t));

@@ -20,15 +20,17 @@ export class Cell {
     return this.y;
   }
 
-  checkNeighbors(grid: GridData): Cell | undefined {
-    let neigbors = [
+  getNeighbors(grid: GridData) {
+    return [
       grid[this.getNeighborIndex(this.x, this.y - 1)],
       grid[this.getNeighborIndex(this.x + 1, this.y)],
       grid[this.getNeighborIndex(this.x, this.y + 1)],
       grid[this.getNeighborIndex(this.x - 1, this.y)],
-    ];
+    ].filter(Boolean);
+  }
 
-    neigbors = neigbors.filter(Boolean).filter(({ visited }) => !visited);
+  checkNeighbors(grid: GridData): Cell | undefined {
+    const neigbors = this.getNeighbors(grid).filter(({visited}) => !visited);
     if (neigbors.length > 0) {
       return neigbors[Math.floor(Math.random() * neigbors.length)];
     }
