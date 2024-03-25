@@ -28,7 +28,7 @@ export default {
     /* ... */
   },
   buildOptions: {
-    out: '../build'
+    out: '../maze-build'
     /* ... */
   },
 };
