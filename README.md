@@ -1,4 +1,6 @@
-# Maze Game
+# Maze Mayhem
+
+Welcome to Maze Mayhem, where every twist and turn leads to excitement and challenge! In this thrilling maze game, players embark on a journey through intricate labyrinths with the ultimate goal of reaching the coveted "Goal Area." Whether you're playing solo or against an AI opponent, prepare for a maze adventure like no other.
 
 ## Available Scripts
 

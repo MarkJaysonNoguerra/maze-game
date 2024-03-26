@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/maze-game/",
+  base: "/maze-mayhem/",
   plugins: [],
   resolve: {
     alias: [],
