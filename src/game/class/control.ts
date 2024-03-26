@@ -1,6 +1,6 @@
-import { GridData } from './grid';
-import { Player } from './player';
-import { Wall as Move } from './walls';
+import { Player } from ".";
+import { Direction } from "../enum";
+import { GridData } from "../type";
 
 const arrowKey = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
 
@@ -21,7 +21,7 @@ export class Control {
     return this.grid[`${x}-${y}`];
   }
 
-  validMove(move: Move) {
-    return !this.getPlayerPosition().walls[move];
+  validMove(direction: Direction) {
+    return !this.getPlayerPosition().walls[direction];
   }
 }

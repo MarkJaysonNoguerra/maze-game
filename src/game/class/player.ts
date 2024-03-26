@@ -1,20 +1,20 @@
-import { Wall as Move } from './walls';
+import { Direction } from "../enum";
 
 export class Player {
   constructor(public x: number, public y: number) {}
 
-  update(move: Move) {
-    switch (move) {
-      case Move.Top:
+  update(direction: Direction) {
+    switch (direction) {
+      case Direction.Top:
         this.y -= 1;
         break;
-      case Move.Right:
+      case Direction.Right:
         this.x += 1;
         break;
-      case Move.Bottom:
+      case Direction.Bottom:
         this.y += 1;
         break;
-      case Move.Left:
+      case Direction.Left:
         this.x -= 1;
         break;
     }

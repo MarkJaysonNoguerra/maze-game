@@ -1,8 +1,8 @@
-import { Cell } from './cell';
-import { drawLine, drawRect } from './helper';
-import { Wall } from './walls';
+import { Cell } from '.';
+import { Direction } from '../enum';
+import { drawLine, drawRect } from '../helper';
 
-export class CanvasDrawer {
+export class Drawer {
   constructor(
     private ctx: CanvasRenderingContext2D,
     private boxWidth: number,
@@ -20,7 +20,7 @@ export class CanvasDrawer {
   }
 
   private drawWalls(cell: Cell) {
-    if (cell.walls[Wall.Top]) {
+    if (cell.walls[Direction.Top]) {
       drawLine(
         this.ctx,
         [this.startingX(cell.getX), this.startingY(cell.getY)],
@@ -28,7 +28,7 @@ export class CanvasDrawer {
       );
     }
 
-    if (cell.walls[Wall.Right]) {
+    if (cell.walls[Direction.Right]) {
       drawLine(
         this.ctx,
         [this.startingX(cell.getX) + this.boxWidth, this.startingY(cell.getY) + this.boxHeight],
@@ -36,7 +36,7 @@ export class CanvasDrawer {
       );
     }
 
-    if (cell.walls[Wall.Bottom]) {
+    if (cell.walls[Direction.Bottom]) {
       drawLine(
         this.ctx,
         [this.startingX(cell.getX) + this.boxWidth, this.startingY(cell.getY) + this.boxHeight],
@@ -44,7 +44,7 @@ export class CanvasDrawer {
       );
     }
 
-    if (cell.walls[Wall.Left]) {
+    if (cell.walls[Direction.Left]) {
       drawLine(
         this.ctx,
         [this.startingX(cell.getX), this.startingY(cell.getY) + this.boxHeight],

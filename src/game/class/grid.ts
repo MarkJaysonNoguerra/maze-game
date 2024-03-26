@@ -1,13 +1,11 @@
-import { CanvasDrawer } from './canvas-drawer';
-import { Cell } from './cell';
-import { Wall } from './walls';
-
-export type GridData = Record<string, Cell>;
+import { Cell, Drawer } from ".";
+import { Direction } from "../enum";
+import { GridData } from "../type";
 
 export class Grid {
   public gridData: GridData = {};
   private visitedCellStack: Cell[] = [];
-  private drawer: CanvasDrawer;
+  private drawer: Drawer;
 
   constructor(
     private ctx: CanvasRenderingContext2D,
@@ -15,7 +13,7 @@ export class Grid {
     private cellWidth: number,
     private cellHeight: number,
   ) {
-    this.drawer = new CanvasDrawer(this.ctx, this.cellWidth, this.cellHeight);
+    this.drawer = new Drawer(this.ctx, this.cellWidth, this.cellHeight);
   }
 
   get getGridData() {
@@ -93,19 +91,19 @@ export class Grid {
   removeWalls(current: Cell, next: Cell) {
     if (next.getX !== current.getX) {
       if (next.getX > current.getX) {
-        current.walls[Wall.Right] = false;
-        next.walls[Wall.Left] = false;
+        current.walls[Direction.Right] = false;
+        next.walls[Direction.Left] = false;
       } else {
-        current.walls[Wall.Left] = false;
-        next.walls[Wall.Right] = false;
+        current.walls[Direction.Left] = false;
+        next.walls[Direction.Right] = false;
       }
     } else {
       if (next.getY > current.getY) {
-        current.walls[Wall.Bottom] = false;
-        next.walls[Wall.Top] = false;
+        current.walls[Direction.Bottom] = false;
+        next.walls[Direction.Top] = false;
       } else {
-        current.walls[Wall.Top] = false;
-        next.walls[Wall.Bottom] = false;
+        current.walls[Direction.Top] = false;
+        next.walls[Direction.Bottom] = false;
       }
     }
   }

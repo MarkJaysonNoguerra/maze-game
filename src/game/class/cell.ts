@@ -1,5 +1,4 @@
-import { GridData } from './grid';
-import { Walls } from './walls';
+import { GridData, Walls } from "../type";
 
 export class Cell {
   public visited = false;
