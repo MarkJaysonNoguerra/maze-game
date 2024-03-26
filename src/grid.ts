@@ -1,6 +1,5 @@
 import { CanvasDrawer } from './canvas-drawer';
 import { Cell } from './cell';
-import { delay } from './helper';
 import { Wall } from './walls';
 
 export type GridData = Record<string, Cell>;

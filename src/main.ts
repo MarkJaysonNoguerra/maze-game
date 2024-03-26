@@ -1,4 +1,5 @@
-// import 'normalize.css';
+import './style.css'
+import 'normalize.css';
 import { Cell } from './cell';
 import { Grid } from './grid';
 import { Player } from './player';
@@ -22,7 +23,7 @@ let grid: Grid;
 
 let player: Player;
 // player.update(Move.Right);
-let control: Control;
+// let control: Control;
 
 window.onload = async () => {
   gameSetup();
@@ -39,7 +40,7 @@ const gameSetup = () => {
   }
 
   player = new Player(0, 0);
-  control = new Control(player, grid.gridData);
+  new Control(player, grid.gridData);
 
   canvas.height = HEIGHT;
   canvas.width = WIDTH;
