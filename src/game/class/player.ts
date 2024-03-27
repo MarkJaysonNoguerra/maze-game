@@ -1,9 +1,35 @@
 import { Direction } from "../enum";
+import { GridData, Position } from "../type";
+
+const arrowKeys = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
 
 export class Player {
-  constructor(public x: number, public y: number) {}
+  constructor(private x: number, private y: number, private _grid: GridData) {
+    window.addEventListener("keydown", ({ code, key }: KeyboardEvent) => {
+      const direction: Direction = arrowKeys.indexOf(code);
 
-  update(direction: Direction) {
+      if (arrowKeys.includes(key) && this.validMove(direction)) {
+        this.move(direction);
+      }
+    });
+  }
+
+  get position(): Position {
+    return {
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  getPlayerPosition() {
+    return this._grid[`${this.x}-${this.y}`];
+  }
+
+  validMove(direction: Direction) {
+    return !this.getPlayerPosition().walls[direction];
+  }
+
+  move(direction: Direction) {
     switch (direction) {
       case Direction.Top:
         this.y -= 1;

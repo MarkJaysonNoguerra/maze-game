@@ -1,53 +1,39 @@
 import { Cell, Drawer } from ".";
 import { Direction } from "../enum";
 import { GridData } from "../type";
+import { MazeInfo } from "./maze-info";
 
 export class Grid {
   public gridData: GridData = {};
   private visitedCellStack: Cell[] = [];
-  private drawer: Drawer;
 
-  constructor(
-    private ctx: CanvasRenderingContext2D,
-    private goal: [number, number],
-    private cellWidth: number,
-    private cellHeight: number,
-  ) {
-    this.drawer = new Drawer(this.ctx, this.cellWidth, this.cellHeight);
-  }
+  constructor(private mazeInfo: MazeInfo) {}
 
-  get getGridData() {
+  get cells() {
     return Object.values(this.gridData);
   }
 
-  private isGoalCell(x: number, y: number) {
-    const [goalX, goalY] = this.goal;
-    return goalX === x && goalY === y;
+  reset() {
+    this.gridData = {};
   }
 
-  addCell(key: string, value: Cell) {
-    this.gridData[key] = value;
-  }
-
-  draw() {
-    const [x, y] = this.goal;
-    this.drawer.drawGoal(
-      x * this.cellWidth,
-      y * this.cellHeight,
-      this.cellWidth,
-      this.cellHeight,
-    );
-    this.drawer.drawMaze(this.getGridData);
+  generate() {
+    for (let index = 0; index < this.mazeInfo.cellCount; index++) {
+      const x = index % this.mazeInfo.column;
+      const y = Math.floor(index / this.mazeInfo.column);
+      
+      this.gridData[`${x}-${y}`] = new Cell(x, y, this.mazeInfo.lastCell);
+    }
   }
 
   resetVisited() {
-    for(const item of this.getGridData) {
+    for (const item of this.cells) {
       item.visited = false;
     }
     return this;
   }
 
-  generatePath(startX: number, startY: number) {
+  findPath(startX: number, startY: number) {
     let current: Cell | undefined = this.gridData[`${startX}-${startY}`];
 
     while (current && !this.isGoalCell(current.getX, current.getY)) {
@@ -64,9 +50,9 @@ export class Grid {
     return this;
   }
 
-  generateUnvisitedPath() {
+  fillUnvisitedPath() {
     let current: Cell | undefined = Object.values(this.gridData).filter(
-      ({ visited }) => !visited,
+      ({ visited }) => !visited
     )[0];
 
     while (current) {
@@ -80,7 +66,7 @@ export class Grid {
         current = this.visitedCellStack.pop();
         if (!current) {
           current = Object.values(this.gridData).filter(
-            ({ visited }) => !visited,
+            ({ visited }) => !visited
           )[0];
         }
       }
@@ -106,5 +92,10 @@ export class Grid {
         next.walls[Direction.Bottom] = false;
       }
     }
+  }
+
+  private isGoalCell(x: number, y: number) {
+    const { x: goalX, y: goalY } = this.mazeInfo.goal;
+    return goalX === x && goalY === y;
   }
 }

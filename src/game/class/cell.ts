@@ -1,4 +1,4 @@
-import { GridData, Walls } from "../type";
+import { GridData, Position, Walls } from "../type";
 
 export class Cell {
   public visited = false;
@@ -7,8 +7,7 @@ export class Cell {
   constructor(
     private x: number,
     private y: number,
-    private maxRow: number,
-    private maxColumn: number,
+    private lastCell: Position
   ) {}
 
   public get getX() {
@@ -29,17 +28,19 @@ export class Cell {
   }
 
   checkNeighbors(grid: GridData): Cell | undefined {
-    const neigbors = this.getNeighbors(grid).filter(({visited}) => !visited);
+    const neigbors = this.getNeighbors(grid).filter(({ visited }) => !visited);
     if (neigbors.length > 0) {
       return neigbors[Math.floor(Math.random() * neigbors.length)];
     }
+
     return undefined;
   }
 
   private getNeighborIndex(x: number, y: number) {
-    if (x < 0 || y < 0 || x > this.maxColumn || y > this.maxRow) {
-      return '';
+    if (x < 0 || y < 0 || x > this.lastCell.x || y > this.lastCell.y) {
+      return "";
     }
+
     return `${x}-${y}`;
   }
 }
