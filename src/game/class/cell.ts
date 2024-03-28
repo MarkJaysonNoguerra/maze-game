@@ -1,4 +1,5 @@
-import { GridData, Position, Walls } from "../type";
+import { Position } from "@/game/class";
+import { GridData, Walls } from "@/game/type";
 
 export class Cell {
   public visited = false;
@@ -10,37 +11,42 @@ export class Cell {
     private lastCell: Position
   ) {}
 
-  public get getX() {
+  get position(): Position {
+    return new Position(this.x, this.y);
+  }
+
+  public get getX(): number {
     return this.x;
   }
 
-  public get getY() {
+  public get getY(): number {
     return this.y;
   }
 
-  getNeighbors(grid: GridData) {
+  getNeighbors(grid: GridData): Cell[] {
     return [
-      grid[this.getNeighborIndex(this.x, this.y - 1)],
-      grid[this.getNeighborIndex(this.x + 1, this.y)],
-      grid[this.getNeighborIndex(this.x, this.y + 1)],
-      grid[this.getNeighborIndex(this.x - 1, this.y)],
+      grid[this.getNeighborIndex(new Position(this.x, this.y - 1))],
+      grid[this.getNeighborIndex(new Position(this.x + 1, this.y))],
+      grid[this.getNeighborIndex(new Position(this.x, this.y + 1))],
+      grid[this.getNeighborIndex(new Position(this.x - 1, this.y))],
     ].filter(Boolean);
   }
 
   checkNeighbors(grid: GridData): Cell | undefined {
     const neigbors = this.getNeighbors(grid).filter(({ visited }) => !visited);
-    if (neigbors.length > 0) {
-      return neigbors[Math.floor(Math.random() * neigbors.length)];
-    }
-
-    return undefined;
+    return neigbors.length > 0
+      ? neigbors[Math.floor(Math.random() * neigbors.length)]
+      : undefined;
   }
 
-  private getNeighborIndex(x: number, y: number) {
-    if (x < 0 || y < 0 || x > this.lastCell.x || y > this.lastCell.y) {
-      return "";
-    }
+  private getNeighborIndex(position: Position): string {
+    return this.isOutSideBoundary(position)
+      ? ""
+      : `${position.x}-${position.y}`;
+  }
 
-    return `${x}-${y}`;
+  private isOutSideBoundary(position: Position): boolean {
+    const { x, y } = position;
+    return x < 0 || y < 0 || x > this.lastCell.x || y > this.lastCell.y;
   }
 }

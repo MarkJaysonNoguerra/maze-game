@@ -1,5 +1,4 @@
-import { Drawer, Grid, Player } from ".";
-import { MazeInfo } from "./maze-info";
+import { Drawer, Grid, MazeInfo, Player, Position } from "@/game/class";
 
 export class Game {
   private grid: Grid;
@@ -13,53 +12,36 @@ export class Game {
   ) {
     this.grid = new Grid(this.mazeInfo);
     this.grid.generate();
-    this.player = new Player(0, 0, this.grid.gridData);
-    this.drawer = new Drawer(this.ctx, this.mazeInfo.cell);
+
+    this.player = new Player(0, 0, this.grid.gridData, this.mazeInfo);
+    this.drawer = new Drawer(this.ctx, this.mazeInfo);
   }
 
-  initialize() {
+  initialize(): void {
     this.grid
-      .findPath(this.mazeInfo.column - 1, this.mazeInfo.row - 1) // ai path
+      .findPath(new Position(this.mazeInfo.column - 1, this.mazeInfo.row - 1)) // ai path
       .resetVisited()
-      .findPath(0, 0) // player path
+      .findPath(new Position(0, 0)) // player path
       .fillUnvisitedPath();
 
     this.animate();
   }
 
-  restart() {
+  restart(): void {
     this.grid.reset();
     this.grid.generate();
-    this.player = new Player(0, 0, this.grid.gridData);
+    this.player = new Player(0, 0, this.grid.gridData, this.mazeInfo);
     this.initialize();
   }
 
-  animate() {
-    this.ctx.clearRect(0, 0, this.mazeInfo.width, this.mazeInfo.height);
-    this.drawer.drawBox(
-      {
-        x: this.mazeInfo.goal.x * this.mazeInfo.cell.width,
-        y: this.mazeInfo.goal.y * this.mazeInfo.cell.height,
-      },
-      this.mazeInfo.cell
-    );
-
+  animate(): void {
+    this.drawer.reset();
+    this.drawer.drawBox(this.mazeInfo.goalCoordinate);
     this.drawer.drawMaze(this.grid.cells);
-
     // player position
-    this.drawer.drawBox(
-      {
-        x: this.player.position.x * this.mazeInfo.cell.width,
-        y: this.player.position.y * this.mazeInfo.cell.height,
-      },
-      this.mazeInfo.cell,
-      "orange"
-    );
+    this.drawer.drawBox(this.player.coordinate, "orange");
 
-    if (
-      this.player.position.x === this.mazeInfo.goal.x &&
-      this.player.position.y === this.mazeInfo.goal.y
-    ) {
+    if (this.player.onGoalArea) {
       cancelAnimationFrame(this.requestAnimation);
 
       setTimeout(() => {

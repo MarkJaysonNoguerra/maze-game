@@ -1,10 +1,17 @@
-import { Direction } from "../enum";
-import { GridData, Position } from "../type";
+import { Cell, MazeInfo, Position } from "@/game/class";
+import { Direction } from "@/game/enum";
+import { gridIndex } from "@/game/helper";
+import { GridData } from "@/game/type";
 
 const arrowKeys = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
 
 export class Player {
-  constructor(private x: number, private y: number, private _grid: GridData) {
+  constructor(
+    private x: number,
+    private y: number,
+    private grid: GridData,
+    private mazeInfo: MazeInfo
+  ) {
     window.addEventListener("keydown", ({ code, key }: KeyboardEvent) => {
       const direction: Direction = arrowKeys.indexOf(code);
 
@@ -14,22 +21,27 @@ export class Player {
     });
   }
 
-  get position(): Position {
-    return {
-      x: this.x,
-      y: this.y,
-    };
+  get coordinate(): Position {
+    return new Position(
+      this.x * this.mazeInfo.cell.width,
+      this.y * this.mazeInfo.cell.height
+    );
   }
 
-  getPlayerPosition() {
-    return this._grid[`${this.x}-${this.y}`];
+  get onGoalArea(): boolean {
+    const { x, y } = this.mazeInfo.goal;
+    return this.x === x && this.y === y;
   }
 
-  validMove(direction: Direction) {
+  getPlayerPosition(): Cell {
+    return this.grid[gridIndex(new Position(this.x, this.y))];
+  }
+
+  validMove(direction: Direction): boolean {
     return !this.getPlayerPosition().walls[direction];
   }
 
-  move(direction: Direction) {
+  move(direction: Direction): void {
     switch (direction) {
       case Direction.Top:
         this.y -= 1;

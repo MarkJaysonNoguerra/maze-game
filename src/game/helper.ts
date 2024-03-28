@@ -1,14 +1,13 @@
-import { Dimension } from "./type/dimension";
-import { Position } from "./type/position";
+import { Dimension, Position } from "./class";
 
 export const drawLine = (
   ctx: CanvasRenderingContext2D,
-  startPoint: [number, number],
-  endpoint: [number, number]
+  startPoint: Position,
+  endpoint: Position
 ) => {
   ctx.beginPath();
-  ctx.moveTo(...startPoint);
-  ctx.lineTo(...endpoint);
+  ctx.moveTo(startPoint.x, startPoint.y);
+  ctx.lineTo(endpoint.x, endpoint.y);
   ctx.strokeStyle = "red";
   ctx.lineWidth = 5;
   ctx.stroke();
@@ -30,6 +29,17 @@ export const drawRect = (
   ctx.fill();
   ctx.closePath();
 };
+
+export const resetCanvas = (
+  ctx: CanvasRenderingContext2D,
+  dimension: Dimension
+) => {
+  ctx.clearRect(0, 0, dimension.width, dimension.height);
+};
+
+export const gridIndex = (position: Position): string => {
+  return `${position.x}-${position.y}`;
+}
 
 export const delay = async (t: number) =>
   new Promise((resolve: any) => setTimeout(() => resolve(), t));

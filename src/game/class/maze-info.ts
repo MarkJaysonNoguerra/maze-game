@@ -1,5 +1,4 @@
-import { Dimension } from "../type/dimension";
-import { Position } from "../type/position";
+import { Dimension, Position } from "@/game/class";
 
 export class MazeInfo {
   constructor(
@@ -10,34 +9,25 @@ export class MazeInfo {
   ) {}
 
   get cell(): Dimension {
-    return {
-      width: this.width / this.column,
-      height: this.height / this.row,
-    };
-  }
-
-  get canvas(): Dimension {
-    return {
-      width: this.width,
-      height: this.height,
-    };
+    return new Dimension(this.width / this.column, this.height / this.row);
   }
 
   get goal(): Position {
-    return {
-      x: Math.round(this.column / 2),
-      y: Math.round(this.row / 2),
-    };
+    return new Position(Math.round(this.column / 2), Math.round(this.row / 2));
   }
 
-  get cellCount() {
+  get goalCoordinate(): Position {
+    return new Position(
+      this.goal.x * this.cell.width,
+      this.goal.y * this.cell.height
+    );
+  }
+
+  get cellCount(): number {
     return this.row * this.column;
   }
 
   get lastCell(): Position {
-    return {
-      x: this.column - 1,
-      y: this.row - 1,
-    };
+    return new Position(this.column - 1, this.row - 1);
   }
 }

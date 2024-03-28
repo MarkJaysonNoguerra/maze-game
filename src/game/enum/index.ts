@@ -1,1 +1,1 @@
-export * from './direction';
+export * from "@/game/enum/direction";

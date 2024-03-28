@@ -1,4 +1,2 @@
-export * from './dimension';
-export * from './grid-data';
-export * from './position';
-export * from './walls';
+export * from "@/game/type/grid-data";
+export * from "@/game/type/walls";

@@ -1,7 +1,7 @@
-import { Cell, Drawer } from ".";
-import { Direction } from "../enum";
-import { GridData } from "../type";
-import { MazeInfo } from "./maze-info";
+import { Cell, MazeInfo, Position } from "@/game/class";
+import { Direction } from "@/game/enum";
+import { gridIndex } from "@/game/helper";
+import { GridData } from "@/game/type";
 
 export class Grid {
   public gridData: GridData = {};
@@ -9,34 +9,37 @@ export class Grid {
 
   constructor(private mazeInfo: MazeInfo) {}
 
-  get cells() {
+  get cells(): Cell[] {
     return Object.values(this.gridData);
   }
 
-  reset() {
+  reset(): Grid {
     this.gridData = {};
+    return this;
   }
 
-  generate() {
+  generate(): Grid {
     for (let index = 0; index < this.mazeInfo.cellCount; index++) {
       const x = index % this.mazeInfo.column;
       const y = Math.floor(index / this.mazeInfo.column);
-      
+
       this.gridData[`${x}-${y}`] = new Cell(x, y, this.mazeInfo.lastCell);
     }
+
+    return this;
   }
 
-  resetVisited() {
+  resetVisited(): Grid {
     for (const item of this.cells) {
       item.visited = false;
     }
     return this;
   }
 
-  findPath(startX: number, startY: number) {
-    let current: Cell | undefined = this.gridData[`${startX}-${startY}`];
-
-    while (current && !this.isGoalCell(current.getX, current.getY)) {
+  findPath(position: Position): Grid {
+    let current: Cell | undefined = this.gridData[gridIndex(position)];
+    while (current && !this.isGoalCell(current.position)) {
+      
       current.visited = true;
       const next: Cell | undefined = current.checkNeighbors(this.gridData);
       if (next) {
@@ -47,13 +50,12 @@ export class Grid {
         current = this.visitedCellStack.pop();
       }
     }
+
     return this;
   }
 
-  fillUnvisitedPath() {
-    let current: Cell | undefined = Object.values(this.gridData).filter(
-      ({ visited }) => !visited
-    )[0];
+  fillUnvisitedPath(): Grid {
+    let current: Cell | undefined = this.firstUnvisitedCell();
 
     while (current) {
       current.visited = true;
@@ -65,18 +67,20 @@ export class Grid {
       } else {
         current = this.visitedCellStack.pop();
         if (!current) {
-          current = Object.values(this.gridData).filter(
-            ({ visited }) => !visited
-          )[0];
+          current = this.firstUnvisitedCell();
         }
       }
     }
+
     return this;
   }
 
-  removeWalls(current: Cell, next: Cell) {
-    if (next.getX !== current.getX) {
-      if (next.getX > current.getX) {
+  removeWalls(current: Cell, next: Cell): Grid {
+    const { x: currentX, y: currentY } = current.position;
+    const { x: nextX, y: nextY } = next.position;
+
+    if (nextX !== currentX) {
+      if (nextX > currentX) {
         current.walls[Direction.Right] = false;
         next.walls[Direction.Left] = false;
       } else {
@@ -84,7 +88,7 @@ export class Grid {
         next.walls[Direction.Right] = false;
       }
     } else {
-      if (next.getY > current.getY) {
+      if (nextY > currentY) {
         current.walls[Direction.Bottom] = false;
         next.walls[Direction.Top] = false;
       } else {
@@ -92,10 +96,16 @@ export class Grid {
         next.walls[Direction.Bottom] = false;
       }
     }
+
+    return this;
   }
 
-  private isGoalCell(x: number, y: number) {
-    const { x: goalX, y: goalY } = this.mazeInfo.goal;
-    return goalX === x && goalY === y;
+  private firstUnvisitedCell(): Cell | undefined {
+    return this.cells.filter(({ visited }) => !visited)[0];
+  }
+
+  private isGoalCell(position: Position) {
+    const { x, y } = this.mazeInfo.goal;
+    return x === position.x && y === position.y;
   }
 }
