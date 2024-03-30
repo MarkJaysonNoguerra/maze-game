@@ -1,5 +1,6 @@
 import { Position } from "@/game/class";
 import { GridData, Walls } from "@/game/type";
+import { gridIndex } from "@/game/helper";
 
 export class Cell {
   public visited = false;
@@ -13,14 +14,6 @@ export class Cell {
 
   get position(): Position {
     return new Position(this.x, this.y);
-  }
-
-  public get getX(): number {
-    return this.x;
-  }
-
-  public get getY(): number {
-    return this.y;
   }
 
   getNeighbors(grid: GridData): Cell[] {
@@ -40,9 +33,7 @@ export class Cell {
   }
 
   private getNeighborIndex(position: Position): string {
-    return this.isOutSideBoundary(position)
-      ? ""
-      : `${position.x}-${position.y}`;
+    return this.isOutSideBoundary(position) ? "" : gridIndex(position);
   }
 
   private isOutSideBoundary(position: Position): boolean {

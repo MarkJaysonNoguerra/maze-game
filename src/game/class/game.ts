@@ -19,10 +19,9 @@ export class Game {
 
   initialize(): void {
     this.grid
-      .findPath(new Position(this.mazeInfo.column - 1, this.mazeInfo.row - 1)) // ai path
-      .resetVisited()
-      .findPath(new Position(0, 0)) // player path
-      .fillUnvisitedPath();
+      .generatePath(new Position(this.mazeInfo.column - 1, this.mazeInfo.row - 1)) // ai path
+      .generatePath(new Position(0, 0)) // player path
+      .randomWalk();
 
     this.animate();
   }

@@ -1,6 +1,6 @@
 import { Cell, MazeInfo, Position } from "@/game/class";
 import { Direction } from "@/game/enum";
-import { gridIndex } from "@/game/helper";
+import { gridIndex, isEqualPosition } from "@/game/helper";
 import { GridData } from "@/game/type";
 
 const arrowKeys = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
@@ -21,6 +21,10 @@ export class Player {
     });
   }
 
+  get position(): Position {
+    return new Position(this.x, this.y);
+  }
+
   get coordinate(): Position {
     return new Position(
       this.x * this.mazeInfo.cell.width,
@@ -29,12 +33,11 @@ export class Player {
   }
 
   get onGoalArea(): boolean {
-    const { x, y } = this.mazeInfo.goal;
-    return this.x === x && this.y === y;
+    return isEqualPosition(this.mazeInfo.goal, this.position);
   }
 
   getPlayerPosition(): Cell {
-    return this.grid[gridIndex(new Position(this.x, this.y))];
+    return this.grid[gridIndex(this.position)];
   }
 
   validMove(direction: Direction): boolean {

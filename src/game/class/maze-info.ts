@@ -13,7 +13,10 @@ export class MazeInfo {
   }
 
   get goal(): Position {
-    return new Position(Math.round(this.column / 2), Math.round(this.row / 2));
+    return new Position(
+      Math.round(this.column / 2) - 1,
+      Math.round(this.row / 2) - 1
+    );
   }
 
   get goalCoordinate(): Position {
