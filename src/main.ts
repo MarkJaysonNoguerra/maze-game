@@ -4,6 +4,7 @@ import "normalize.css";
 
 import { Game } from "./game/class/game";
 import { MazeInfo } from "./game/class/maze-info";
+import { Mode } from "./game/enum";
 
 const HEIGHT = 400;
 const WIDTH = 800;
@@ -16,5 +17,20 @@ window.onload = () => {
   canvas.height = HEIGHT;
   canvas.width = WIDTH;
 
-  new Game(ctx, new MazeInfo(ROW, COLUMN, WIDTH, HEIGHT)).initialize();
+  const mode = document.querySelector("#mode") as HTMLSelectElement;
+
+  const game = new Game(
+    ctx,
+    new MazeInfo(ROW, COLUMN, WIDTH, HEIGHT),
+    Mode.Solo
+  );
+  game.start();
+
+  mode.addEventListener("change", (e: Event) => {
+    const select = e.target as HTMLSelectElement;
+    game.setMode(+select.value);
+    game.stop();
+    game.initialize();
+    game.start();
+  });
 };
